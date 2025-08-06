@@ -16,6 +16,7 @@ class Poligono:
     def __init__(self, vertices: List[Tuple[float, float]]):
         self._vertices = [Ponto(x, y) for x, y in vertices]
         self._cor_rgb = (255, 255, 255)  # Branco padrão
+        self._cor_vertices = [(255,255,255) for vertice in vertices]
         self._preenchimento_ativado = False
         self._esta_selecionado = False
 
@@ -30,6 +31,14 @@ class Poligono:
     @cor_rgb.setter
     def cor_rgb(self, valor: Tuple[int, int, int]):
         self._cor_rgb = valor
+
+    @property
+    def cor_vertices(self) -> List[Tuple[int, int, int]]:
+        return self._cor_vertices
+    
+    @cor_vertices.setter
+    def cor_vertices(self, lista_valores: List[Tuple[int, int, int]]):
+        self._cor_vertices = lista_valores
 
     @property
     def preenchimento_ativado(self) -> bool:

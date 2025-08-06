@@ -121,6 +121,7 @@ class App:
         if self._modo_interacao == "desenho" and len(self._vertices_temporarios) >= 3:
             novo_poligono = self._gerenciador_poligonos.adicionar_poligono(self._vertices_temporarios)
             novo_poligono.cor_rgb = self._cor_preenchimento_atual
+            novo_poligono.cor_vertices = [self._cor_preenchimento_atual for vertice in self._vertices_temporarios]
             self._vertices_temporarios = []
             self.renderizar_cena()
         else:
@@ -146,11 +147,76 @@ class App:
         self.renderizar_cena()
 
     def _exibir_dialogo_cor(self):
-        """Exibe o seletor de cores e aplica ao polígono selecionado"""
-        cor = colorchooser.askcolor()[0]
-        if cor and self._gerenciador_poligonos.poligono_selecionado:
-            self._gerenciador_poligonos.poligono_selecionado.cor_rgb = tuple(int(c) for c in cor)
+        """
+        Abre uma nova janela para permitir a seleção de cor para cada vértice
+        individualmente do polígono selecionado.
+        """
+        poligono_selecionado = self._gerenciador_poligonos.poligono_selecionado
+        
+        if not poligono_selecionado:
+            messagebox.showinfo("Nenhum Polígono Selecionado", "Por favor, selecione um polígono no modo 'Seleção' primeiro.")
+            return
+
+        # Cria uma nova janela (Toplevel) para a edição de cores
+        dialogo_cores = tk.Toplevel(self.root)
+        dialogo_cores.title("Editor de Cores dos Vértices")
+        dialogo_cores.geometry("300x400")
+        dialogo_cores.resizable(False, True)
+        # Faz com que a janela de diálogo fique em foco
+        dialogo_cores.grab_set()
+
+        # Função auxiliar para converter RGB para o formato hexadecimal que o Tkinter usa
+        def _rgb_para_hex(rgb_tuple: Tuple[int, int, int]) -> str:
+            return f"#{rgb_tuple[0]:02x}{rgb_tuple[1]:02x}{rgb_tuple[2]:02x}"
+
+        # Função que será chamada pelo botão para alterar a cor de um vértice específico
+        def _mudar_cor_vertice(indice_vertice: int, label_preview: tk.Label):
+            # Abre o seletor de cores
+            
+            cor_escolhida = colorchooser.askcolor(
+                color=_rgb_para_hex(poligono_selecionado.cor_vertices[indice_vertice]),
+                title=f"Escolha a cor para o Vértice {indice_vertice + 1}"
+            )
+            
+            # A cor_escolhida é uma tupla ((R, G, B), "#RRGGBB")
+            if cor_escolhida and cor_escolhida[0]:
+                cor_rgb = tuple(int(c) for c in cor_escolhida[0])
+                cor_hex = cor_escolhida[1]
+
+                # Atualiza a cor no modelo de dados do polígono
+                poligono_selecionado.cor_vertices[indice_vertice] = cor_rgb
+                
+                # Atualiza a cor da caixa de preview na janela de diálogo
+                label_preview.config(bg=cor_hex)
+                self.renderizar_cena()
+
+        # Cria uma linha na UI para cada vértice
+        for i, vertice in enumerate(poligono_selecionado.vertices):
+            frame_vertice = tk.Frame(dialogo_cores, bd=2, relief=tk.GROOVE)
+            frame_vertice.pack(fill=tk.X, padx=5, pady=3)
+
+            tk.Label(frame_vertice, text=f"Vértice {i + 1}").pack(side=tk.LEFT, padx=5)
+
+            # Preview da cor atual
+            cor_atual_hex = _rgb_para_hex(poligono_selecionado.cor_vertices[i])
+            preview = tk.Label(frame_vertice, text="    ", bg=cor_atual_hex, relief=tk.SUNKEN)
+            preview.pack(side=tk.LEFT, padx=5)
+            
+            # Botão para mudar a cor, usando lambda para passar o índice correto
+            tk.Button(
+                frame_vertice, 
+                text="Mudar Cor", 
+                command=lambda index=i, p=preview: _mudar_cor_vertice(index, p)
+            ).pack(side=tk.RIGHT, padx=5)
+
+    def _aplicar_preenchimento_poligono(self):
+        """Ativa o preenchimento para o polígono selecionado"""
+        if self._gerenciador_poligonos.poligono_selecionado:
+            self._gerenciador_poligonos.poligono_selecionado.preenchimento_ativado = not self._gerenciador_poligonos.poligono_selecionado.preenchimento_ativado
             self.renderizar_cena()
+        else:
+            messagebox.showinfo("Nenhum Polígono Selecionado", "Por favor, selecione um polígono no modo 'Seleção' primeiro.")
+
 
     def _aplicar_preenchimento_poligono(self):
         """Ativa o preenchimento para o polígono selecionado"""
