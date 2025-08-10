@@ -10,7 +10,7 @@ Esta é uma aplicação gráfica interativa desenvolvida em Python com a bibliot
 
 ## Como Executar
 
-O projeto utiliza apenas bibliotecas padrão do Python. Para executá-lo, basta baixar a pasta do projeto e ter o Python 3 instalado.
+Para executar o projeto, basta baixar a pasta do projeto e ter o Python 3 instalado.
 
 ```bash
 # Navegue até a pasta do projeto
@@ -19,6 +19,14 @@ cd /caminho/para/o/projeto
 # Execute o arquivo main.py
 python main.py
 ```
+
+A biblioteca tkinter é usada para apresentar a interface do projeto e é uma biblioteca nativa do python, porém algumas versões do Ubuntu não instalam ele por padrão com o python. Caso precise você pode instalá-lo com o comando:
+
+```bash
+sudo apt-get install python3-tk
+```
+
+
 
 ## Funcionalidades Principais
 
