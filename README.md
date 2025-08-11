@@ -6,7 +6,7 @@ Trabalho da disciplina de Computação Gráfica - Ciência da Computação, Unio
 
 ## Visão Geral do Projeto
 
-Esta é uma aplicação gráfica interativa desenvolvida em Python com a biblioteca `tkinter`. O objetivo do projeto é demonstrar a implementação e o funcionamento do algoritmo de preenchimento de polígonos **Scan-line**, com a adição de **sombreamento de Gouraud** para permitir a interpolação de cores suaves entre os vértices.
+Esta é uma aplicação gráfica interativa desenvolvida em Python com a biblioteca `tkinter`. O objetivo do projeto é demonstrar a implementação e o funcionamento do algoritmo de preenchimento de polígonos **Scanline**, com a adição de **sombreamento de Gouraud** para permitir a interpolação de cores suaves entre os vértices.
 
 ## Como Executar
 
@@ -59,9 +59,9 @@ O código está organizado de forma modular para separar as responsabilidades:
 
 ## Detalhes da Implementação
 
-### Algoritmo de Preenchimento (Scan-line)
+### Algoritmo de Preenchimento (Scanline)
 
-O `fillpoly.py` implementa o algoritmo *Scan-line*. O processo consiste em:
+O `fillpoly.py` implementa o algoritmo **FillPoly**. O processo consiste em:
 
 1.  Construir uma tabela de arestas (`lista_arestas`) que armazena, para cada linha de varredura (`scanline`) horizontal, as informações das arestas do polígono que a cruzam.
 2.  Para cada `scanline`, as interseções são ordenadas pelo seu valor X.
